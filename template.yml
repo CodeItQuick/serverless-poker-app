@@ -1,13 +1,23 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
-Description: React TodoMVC with a Serverless backend
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: amazon-connect-interactive-messages-example
+    Description: Creates AWS Lambda function to be used as an initialization and validation code hook in Amazon Lex Bot for enabling interactive messages in Amazon Connect Chat.
+    Author: Amazon Connect CX Innovations
+    SpdxLicenseId: MIT-0
+    Labels: ['connect', 'chat', 'interactive-messaging', 'contact-center', 'lambda', 'lex', 'bot']
+    SemanticVersion: 0.0.1
 Globals:
+  Function:
+    Timeout: 5
   Api:
     BinaryMediaTypes:
       # The ~1 will be replaced with / when deployed
       - '*~1*'
 Resources:
-  siteFunction:
+  InteractiveMessagingLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       Description: React TodoMVC with a Serverless backend
@@ -18,26 +28,40 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName:
               Ref: todoTable
-      Timeout: 10
+      Timeout: 5
       Events:
         root:
           Type: Api
           Properties:
-            Path: /
+            Path: /prod
             Method: get
         getProxy:
           Type: Api
           Properties:
-            Path: '/{proxy+}'
+            Path: '/prod/{proxy+}'
             Method: get
         postProxy:
           Type: Api
           Properties:
-            Path: '/{proxy+}'
+            Path: '/prod/{proxy+}'
+            Method: post
+        apiPost:
+          Type: Api
+          Properties:
+            Path: /api
             Method: post
       Environment:
         Variables:
           TABLE:
             Ref: todoTable
+      
   todoTable:
     Type: AWS::Serverless::SimpleTable
+
+Outputs:
+  InteractiveMessagingLambdaFunction:
+    Description: "Interactive Messaging Lex Lambda Function ARN"
+    Value: !GetAtt InteractiveMessagingLambdaFunction.Arn
+  InteractiveMessagingFunctionIamRole:
+    Description: "Implicit IAM Role created for Interactive Messaging Lex Lambda Function"
+    Value: !GetAtt InteractiveMessagingLambdaFunctionRole.Arn

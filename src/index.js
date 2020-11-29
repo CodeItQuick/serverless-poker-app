@@ -4,95 +4,140 @@ const fs = require('fs');
 const mime = require('mime-types');
 const path = require('path');
 
+const {
+  FULFILLMENT_STATES,
+  TEST_INTERACTIVE_OPTIONS,
+} = require("./constants/interactive_options.js");
+const { formTerminalResponse } = require("./util/response_handler.js");
+const {
+  handleElicitAction,
+  handleActionResponse,
+  handleInteractiveOptionResponse,
+  handleOtherResponse,
+} = require("./util/user_input_handler.js");
+
 exports.handler = main;
 const key = 'user_key';
 
 const routes = {
-  '/api/todos': todosRoute
+  '/api/': true
 };
 
 function main(event, context, lambdaCallback) {
-  if (routes[event.path]) {
-    return routes[event.path](event, context, lambdaCallback);
+  console.log(event);
+  if (JSON.parse(event.body) !== null) {
+    try {
+      console.log(`Request received: ${event.body}`);
+      let response = handleRequest(JSON.parse(event.body));
+      console.log(`Returning response: ${JSON.stringify(response)}`);
+      return done(200, JSON.stringify(response.dialogAction), 'application/json', lambdaCallback);
+    } catch (err) {
+      console.error(`Error processing Lex request:`, err);
+      return done(200, err, 'application/json', lambdaCallback);
+    }
   } else {
     return servePublic(event, context, lambdaCallback);
   }
 }
 
-function todosRoute(event, context, lambdaCallback) {
-  if (event.httpMethod === 'GET') {
-    return getTodos(key, lambdaCallback);
-  } else if (event.httpMethod === 'POST') {
+/* PROCESS INBOUND MESSAGE */
+function handleRequest(request) {
+  let input = request.inputTranscript;
+  let recent_intent = request.recentIntentSummaryView;
+  let current_intent = request.currentIntent.name;
 
-    // Get the string form of the body data
-    var todoString = event.body;
-    if (event.isBase64Encoded) {
-      todoString = Buffer.from(event.body, 'base64').toString();
-    }
+  /* HANDLE INTENT 'InteractiveMessageIntent' */
+  if (current_intent === 'InteractiveMessageIntent' && recent_intent === null) {
+    return handleElicitAction(request);
+  } else if (current_intent === 'InteractiveMessageIntent' && !recent_intent[0].slots.action) {
+    return handleActionResponse(input, request);
+  } else if (current_intent === 'InteractiveMessageIntent' && Object.values(TEST_INTERACTIVE_OPTIONS).includes(input) && recent_intent[0].slots.interactiveOption === null) {
+    return handleInteractiveOptionResponse(input, request);
+  } 
+  /* (optional) HANDLE OTHER INTENTS */
 
-    // Parse it and save, or indicate bad input
-    try {
-      let todos = JSON.parse(todoString);
-      return saveTodos(key, todos, lambdaCallback);
-    } catch (err) {
-      console.error(err);
-      return done(400, '{"message":"Invalid JSON body"}', 'application/json', lambdaCallback);
-    }
-  } else {
-    return done(400, '{"message":"Invalid HTTP Method"}', 'application/json', lambdaCallback);
+  /* HANDLE FULFILLED INTENT */
+  else {
+    return handleOtherResponse(input, request);
   }
 }
 
-function getTodos(id, lambdaCallback) {
-  const params = {
-    TableName: process.env.TABLE,
-    Key: {
-      id: id
-    }
-  };
+// function todosRoute(event, context, lambdaCallback) {
+//   if (event.httpMethod === 'GET') {
+//     return getTodos(key, lambdaCallback);
+//   } else if (event.httpMethod === 'POST') {
 
-  doc.get(params, function(err, data) {
-    if (err) {
-      console.log('DynamoDB error on get: ', err);
-      return done(500, '{"message":"Internal Server Error"}', 'application/json', lambdaCallback);
-    } else {
-      if (!data.Item) {
-        return done(200, '[]', 'application/json', lambdaCallback);
-      } else {
-        return done(200, JSON.stringify(data.Item.todos), 'application/json', lambdaCallback);
-      }
-    }
-  });
-}
+//     // Get the string form of the body data
+//     var todoString = event.body;
+//     if (event.isBase64Encoded) {
+//       todoString = Buffer.from(event.body, 'base64').toString();
+//     }
 
-function saveTodos(id, todos, lambdaCallback) {
-  const params = {
-    TableName: process.env.TABLE,
-    Item: {
-      id: id,
-      todos: todos
-    }
-  };
+//     // Parse it and save, or indicate bad input
+//     try {
+//       let todos = JSON.parse(todoString);
+//       return saveTodos(key, todos, lambdaCallback);
+//     } catch (err) {
+//       console.error(err);
+//       return done(400, '{"message":"Invalid JSON body"}', 'application/json', lambdaCallback);
+//     }
+//   } else {
+//     return done(400, '{"message":"Invalid HTTP Method"}', 'application/json', lambdaCallback);
+//   }
+// }
 
-  doc.put(params, function(err, data) {
-    if (err) {
-      console.log('DynamoDB error on put: ', err);
-      return done(500, '{"message":"Internal Server Error"}', 'application/json', lambdaCallback);
-    } else {
-      return done(200, '{"message":"Success"}', 'application/json', lambdaCallback);
-    }
-  });
-}
+// function getTodos(id, lambdaCallback) {
+//   const params = {
+//     TableName: process.env.TABLE,
+//     Key: {
+//       id: id
+//     }
+//   };
+
+//   doc.get(params, function(err, data) {
+//     if (err) {
+//       console.log('DynamoDB error on get: ', err);
+//       return done(500, '{"message":"Internal Server Error"}', 'application/json', lambdaCallback);
+//     } else {
+//       if (!data.Item) {
+//         return done(200, '[]', 'application/json', lambdaCallback);
+//       } else {
+//         return done(200, JSON.stringify(data.Item.todos), 'application/json', lambdaCallback);
+//       }
+//     }
+//   });
+// }
+
+// function saveTodos(id, todos, lambdaCallback) {
+//   const params = {
+//     TableName: process.env.TABLE,
+//     Item: {
+//       id: id,
+//       todos: todos
+//     }
+//   };
+
+//   doc.put(params, function(err, data) {
+//     if (err) {
+//       console.log('DynamoDB error on put: ', err);
+//       return done(500, '{"message":"Internal Server Error"}', 'application/json', lambdaCallback);
+//     } else {
+//       return done(200, '{"message":"Success"}', 'application/json', lambdaCallback);
+//     }
+//   });
+// }
 
 // Attempt to serve public content from the public directory
 function servePublic(event, context, lambdaCallback) {
   // Set urlPath
   var urlPath;
-  if (event.path === '/') {
+  if (event.path === '/prod') {
     return serveIndex(event, context, lambdaCallback);
   } else {
-    urlPath = event.path;
+    urlPath = event.path.substring(5);
   }
+
+  console.log(urlPath);
 
   // Determine the file's path on lambda's filesystem
   var publicPath = path.join(process.env.LAMBDA_TASK_ROOT, 'public');

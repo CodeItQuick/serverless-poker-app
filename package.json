@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "node_modules/gulp/bin/gulp.js",
-    "package": "aws cloudformation package --template-file template.yml --output-template-file packaged-template.yml --s3-bucket $CODE_BUCKET",
-    "deploy": "aws cloudformation deploy --template-file packaged-template.yml --capabilities CAPABILITY_IAM --stack-name dev-todo-$USER"
+    "package": "aws cloudformation package --region us-east-1 --template-file template.yml --output-template-file packaged-template.yml --s3-bucket $CODE_BUCKET",
+    "deploy": "aws cloudformation deploy --region us-east-1 --template-file packaged-template.yml --capabilities CAPABILITY_IAM --stack-name dev-todo-$USER"
   },
   "repository": {
     "type": "git",
