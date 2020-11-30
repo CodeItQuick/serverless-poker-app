@@ -1,0 +1,126 @@
+Flow: help-> 
+
+Chatter: help -> Check self-service options -> Choose a department -> 
+
+Chatbot:
+RequestID: 4e55e66d-ce73-424f-b05e-3ea1f42a7aa2
+{
+  "activeContexts": [],
+  "alternativeIntents": [
+    {
+      "intentName": "AMAZON.FallbackIntent",
+      "nluIntentConfidence": null,
+      "slots": {}
+    }
+  ],
+  "botVersion": "$LATEST",
+  "dialogState": "ElicitSlot",
+  "intentName": "InteractiveMessageIntent",
+  "message": "{\"templateType\":\"ListPicker\",\"version\":\"1.0\",\"data\":{\"content\":{\"title\":\"How can I help you?\",\"subtitle\":\"Tap to select option\",\"elements\":[{\"title\":\"Check self-service options\"},{\"title\":\"Talk to an agent\"},{\"title\":\"End chat\"}]}}}",
+  "messageFormat": "CustomPayload",
+  "nluIntentConfidence": {
+    "score": 1
+  },
+  "responseCard": null,
+  "sentimentResponse": {
+    "sentimentLabel": "NEUTRAL",
+    "sentimentScore": "{Positive: 0.08804001,Negative: 0.05816049,Neutral: 0.7113031,Mixed: 0.14249638}"
+  },
+  "sessionAttributes": {},
+  "sessionId": "2020-11-29T16:33:16.948Z-rLpTAFnV",
+  "slotToElicit": "action",
+  "slots": {
+    "action": null,
+    "appointment": null,
+    "department": null,
+    "interactiveOption": null
+  }
+}
+Choose a department
+RequestID: dff468f4-6609-4e11-aea5-f5da4c262813
+{
+  "activeContexts": [],
+  "alternativeIntents": [
+    {
+      "intentName": "AMAZON.FallbackIntent",
+      "nluIntentConfidence": null,
+      "slots": {}
+    }
+  ],
+  "botVersion": "$LATEST",
+  "dialogState": "ElicitSlot",
+  "intentName": "InteractiveMessageIntent",
+  "message": "{\"templateType\":\"ListPicker\",\"version\":\"1.0\",\"data\":{\"content\":{\"title\":\"What would you like to do?\",\"subtitle\":\"Tap to select option\",\"elements\":[{\"title\":\"Choose a department\"},{\"title\":\"Schedule a meeting with an agent\"}]}}}",
+  "messageFormat": "CustomPayload",
+  "nluIntentConfidence": {
+    "score": 1
+  },
+  "responseCard": null,
+  "sentimentResponse": {
+    "sentimentLabel": "NEUTRAL",
+    "sentimentScore": "{Positive: 0.001133951,Negative: 0.012301752,Neutral: 0.98519903,Mixed: 0.0013652504}"
+  },
+  "sessionAttributes": {},
+  "sessionId": "2020-11-29T16:43:51.181Z-fAvvhfjO",
+  "slotToElicit": "interactiveOption",
+  "slots": {
+    "action": "Check self-service options",
+    "appointment": null,
+    "department": null,
+    "interactiveOption": null
+  }
+}
+
+Choose a departmentRequestID: d410375f-5e28-4112-86d0-3e7daf969b72
+{
+  "activeContexts": [],
+  "alternativeIntents": [
+    {
+      "intentName": "AMAZON.FallbackIntent",
+      "nluIntentConfidence": null,
+      "slots": {}
+    }
+  ],
+  "botVersion": "$LATEST",
+  "dialogState": "ElicitSlot",
+  "intentName": "InteractiveMessageIntent",
+  "message": "{\"templateType\":\"ListPicker\",\"version\":\"1.0\",\"data\":{\"content\":{\"title\":\"Which department do you want to select?\",\"subtitle\":\"Tap to select option\",\"imageType\":\"URL\",\"imageData\":\"https://amazon-connect-interactive-message-blog-assets.s3-us-west-2.amazonaws.com/interactive-images/company.jpg\",\"elements\":[{\"title\":\"Billing\",\"subtitle\":\"Request billing information\",\"imageType\":\"URL\",\"imageData\":\"https://amazon-connect-interactive-message-blog-assets.s3-us-west-2.amazonaws.com/interactive-images/billing.jpg\"},{\"title\":\"New Service\",\"subtitle\":\"Set up a new service\",\"imageType\":\"URL\",\"imageData\":\"https://amazon-connect-interactive-message-blog-assets.s3-us-west-2.amazonaws.com/interactive-images/new_service.jpg\"},{\"title\":\"Cancellation\",\"subtitle\":\"Request a cancellation\",\"imageType\":\"URL\",\"imageData\":\"https://amazon-connect-interactive-message-blog-assets.s3-us-west-2.amazonaws.com/interactive-images/cancel.jpg\"}]}}}",
+  "messageFormat": "CustomPayload",
+  "nluIntentConfidence": {
+    "score": 1
+  },
+  "responseCard": null,
+  "sentimentResponse": {
+    "sentimentLabel": "NEUTRAL",
+    "sentimentScore": "{Positive: 0.023087509,Negative: 0.012684064,Neutral: 0.9631847,Mixed: 0.0010436865}"
+  },
+  "sessionAttributes": {},
+  "sessionId": "2020-11-29T16:43:51.181Z-fAvvhfjO",
+  "slotToElicit": "department",
+  "slots": {
+    "action": "Check self-service options",
+    "appointment": null,
+    "department": null,
+    "interactiveOption": "Choose a department"
+  }
+}
+
+Request billing information
+RequestID: f46c000e-787a-452b-a434-71a2dce38609
+{
+  "activeContexts": [],
+  "botVersion": "$LATEST",
+  "dialogState": "ElicitIntent",
+  "intentName": null,
+  "message": "Received 'Request billing information'\n\nPlease send 'help' to start again",
+  "messageFormat": "PlainText",
+  "responseCard": null,
+  "sentimentResponse": {
+    "sentimentLabel": "NEUTRAL",
+    "sentimentScore": "{Positive: 2.2895663E-4,Negative: 0.0022167547,Neutral: 0.9975255,Mixed: 2.8804474E-5}"
+  },
+  "sessionAttributes": {},
+  "sessionId": "2020-11-29T16:43:51.181Z-fAvvhfjO",
+  "slotToElicit": null,
+  "slots": null
+}

@@ -97,16 +97,16 @@ const TEST_INTERACTIVE_OPTIONS_TEMPLATES = {
         subtitle: "Tap to select option",
         timeslots: [
           {
-            date: "2020-10-31T18:00+00:00",
-            duration: 60,
+            title: "2020-10-31T18:00+00:00",
+            subtitle: 60,
           },
           {
-            date: "2020-10-15T13:00+00:00",
-            duration: 60,
+            title: "2020-10-15T13:00+00:00",
+            subtitle: 60,
           },
           {
-            date: "2020-10-15T16:00+00:00",
-            duration: 60,
+            title: "2020-10-15T16:00+00:00",
+            subtitle: 60,
           },
         ],
       },
@@ -117,28 +117,18 @@ const TEST_INTERACTIVE_OPTIONS_TEMPLATES = {
     version: "1.0",
     data: {
       content: {
-        title: "Which department do you want to select?",
-        subtitle: "Tap to select option",
-        imageType: "URL",
-        imageData: IMAGE_URLS.COMPANY,
         elements: [
           {
             title: DEPARTMENT_SLOT.BILLING,
             subtitle: "Request billing information",
-            imageType: "URL",
-            imageData: IMAGE_URLS.BILLING,
           },
           {
             title: DEPARTMENT_SLOT.NEW_SERVICE,
             subtitle: "Set up a new service",
-            imageType: "URL",
-            imageData: IMAGE_URLS.NEW_SERVICE,
           },
           {
             title: DEPARTMENT_SLOT.CANCELLATION,
             subtitle: "Request a cancellation",
-            imageType: "URL",
-            imageData: IMAGE_URLS.CANCELLATION,
           },
         ],
       },
@@ -147,6 +137,7 @@ const TEST_INTERACTIVE_OPTIONS_TEMPLATES = {
 };
 
 module.exports = {
+  DEPARTMENT_SLOT,
   FULFILLMENT_STATES,
   SLOTS,
   TEMPLATE_TYPES,

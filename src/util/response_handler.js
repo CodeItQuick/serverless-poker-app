@@ -15,10 +15,7 @@ function formElicitSlotWithTemplateResponse(
       intentName,
       slots,
       slotToElicit,
-      message: {
-        contentType: "CustomPayload",
-        content: JSON.stringify(template),
-      },
+      message: JSON.stringify(template.map(({ title }) => ({ title: title || '' })))
     },
   };
 }
@@ -30,10 +27,7 @@ function formTerminalResponse(sessionAttributes,fulfillmentState, messageText) {
     dialogAction: {
       type: "Close",
       fulfillmentState,
-      message: {
-        contentType: "PlainText",
-        content: messageText,
-      },
+      message: JSON.stringify(messageText)
     },
   };
 }
@@ -45,10 +39,7 @@ function formElicitIntentResponse(sessionAttributes,intentName, messageText) {
     recentIntentSummaryView: [],
     dialogAction: {
       type: "ElicitIntent",
-      message: {
-        contentType: "PlainText",
-        content: messageText,
-      },
+      message: JSON.stringify(messageText)
     },
   };
 }

@@ -14,6 +14,7 @@ const {
   TEST_INTERACTIVE_OPTIONS,
   TEST_INTERACTIVE_OPTIONS_SLOTS,
   TEST_INTERACTIVE_OPTIONS_TEMPLATES,
+  DEPARTMENT_SLOT
 } = require("../constants/interactive_options");
 
 /* HANDLE INITIAL UTTERANCE INPUT */
@@ -26,7 +27,7 @@ function handleElicitAction(request) {
     request.currentIntent.name,
     request.currentIntent.slots,
     SLOTS.ACTION,
-    template,
+    template.data.content.elements,
     request.sessionAttributes
   );
 }
@@ -49,8 +50,50 @@ function handleActionResponse(input, request) {
       request.currentIntent.name,
       request.currentIntent.slots,
       SLOTS.INTERACTIVE_OPTION,
-      template,
+      template.data.content.elements,
       outputSessionAttributes
+    );
+  } else if (TEST_INTERACTIVE_OPTIONS.DEPARTMENT_WITH_MULTIPLE_IMAGES === input) {
+    let template = createSimpleListPickerFromOptions(
+      "Which department would you like to see?",
+      Object.values(DEPARTMENT_SLOT)
+    );
+    
+    let elicitSlot = TEST_INTERACTIVE_OPTIONS_SLOTS.DEPARTMENT_WITH_MULTIPLE_IMAGES;
+    var outputSessionAttributes = request.sessionAttributes || {};
+    return formElicitSlotWithTemplateResponse(
+      request.currentIntent.name,
+      request.currentIntent.slots,
+      elicitSlot,
+      template.data.content.elements,
+      outputSessionAttributes
+    );
+    } else if (TEST_INTERACTIVE_OPTIONS.SIMPLE_TIMEPICKER === input) {
+    let template = createSimpleListPickerFromOptions(
+      "Which timeslot do you want?",
+      TEST_INTERACTIVE_OPTIONS_TEMPLATES.SIMPLE_TIMEPICKER.data.content.timeslots.map(({title}) => title)
+    );
+    
+    let elicitSlot = TEST_INTERACTIVE_OPTIONS_SLOTS.SIMPLE_TIMEPICKER;
+    var outputSessionAttributes = request.sessionAttributes || {};
+    return formElicitSlotWithTemplateResponse(
+      request.currentIntent.name,
+      request.currentIntent.slots,
+      elicitSlot,
+      template.data.content.elements,
+      outputSessionAttributes
+    );
+  } else if ( Object.keys(DEPARTMENT_SLOT).filter(check => input === DEPARTMENT_SLOT[check]).length > 0) {
+    return formTerminalResponse(
+      request.sessionAttributes,
+      FULFILLMENT_STATES.FULFILLED,
+      `Received '${input}'`
+    );
+  } else if ( TEST_INTERACTIVE_OPTIONS_TEMPLATES.SIMPLE_TIMEPICKER.data.content.timeslots.filter(timeslot => input === timeslot.title).length > 0) {
+    return formTerminalResponse(
+      request.sessionAttributes,
+      FULFILLMENT_STATES.FULFILLED,
+      `Received '${input}'`
     );
   } else {
     throw new Error(`Invalid action recieved: ${input}`);

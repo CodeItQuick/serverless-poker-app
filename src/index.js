@@ -24,11 +24,15 @@ const routes = {
 };
 
 function main(event, context, lambdaCallback) {
-  console.log(event);
-  if (JSON.parse(event.body) !== null) {
+  console.log(event.body === null);
+  var eventToString = false;
+  if (event.body !== null && event.isBase64Encoded) {
+    eventToString = Buffer.from(event.body, 'base64').toString();
+  }
+  if (event.body !== null) {
     try {
-      console.log(`Request received: ${event.body}`);
-      let response = handleRequest(JSON.parse(event.body));
+      console.log(`Request received: ${eventToString || event.body}`);
+      let response = handleRequest(JSON.parse(eventToString || event.body));
       console.log(`Returning response: ${JSON.stringify(response)}`);
       return done(200, JSON.stringify(response.dialogAction), 'application/json', lambdaCallback);
     } catch (err) {
@@ -44,16 +48,17 @@ function main(event, context, lambdaCallback) {
 function handleRequest(request) {
   let input = request.inputTranscript;
   let recent_intent = request.recentIntentSummaryView;
+  let recent_intent_action = null;
+  if (recent_intent !== null)
+    recent_intent_action = request.recentIntentSummaryView[0].slots.action;
   let current_intent = request.currentIntent.name;
 
   /* HANDLE INTENT 'InteractiveMessageIntent' */
-  if (current_intent === 'InteractiveMessageIntent' && recent_intent === null) {
+  if (current_intent === 'InteractiveMessageIntent' && input === 'help') {
     return handleElicitAction(request);
-  } else if (current_intent === 'InteractiveMessageIntent' && !recent_intent[0].slots.action) {
+  } else if (current_intent === 'InteractiveMessageIntent') {
     return handleActionResponse(input, request);
-  } else if (current_intent === 'InteractiveMessageIntent' && Object.values(TEST_INTERACTIVE_OPTIONS).includes(input) && recent_intent[0].slots.interactiveOption === null) {
-    return handleInteractiveOptionResponse(input, request);
-  } 
+  }
   /* (optional) HANDLE OTHER INTENTS */
 
   /* HANDLE FULFILLED INTENT */
@@ -61,71 +66,6 @@ function handleRequest(request) {
     return handleOtherResponse(input, request);
   }
 }
-
-// function todosRoute(event, context, lambdaCallback) {
-//   if (event.httpMethod === 'GET') {
-//     return getTodos(key, lambdaCallback);
-//   } else if (event.httpMethod === 'POST') {
-
-//     // Get the string form of the body data
-//     var todoString = event.body;
-//     if (event.isBase64Encoded) {
-//       todoString = Buffer.from(event.body, 'base64').toString();
-//     }
-
-//     // Parse it and save, or indicate bad input
-//     try {
-//       let todos = JSON.parse(todoString);
-//       return saveTodos(key, todos, lambdaCallback);
-//     } catch (err) {
-//       console.error(err);
-//       return done(400, '{"message":"Invalid JSON body"}', 'application/json', lambdaCallback);
-//     }
-//   } else {
-//     return done(400, '{"message":"Invalid HTTP Method"}', 'application/json', lambdaCallback);
-//   }
-// }
-
-// function getTodos(id, lambdaCallback) {
-//   const params = {
-//     TableName: process.env.TABLE,
-//     Key: {
-//       id: id
-//     }
-//   };
-
-//   doc.get(params, function(err, data) {
-//     if (err) {
-//       console.log('DynamoDB error on get: ', err);
-//       return done(500, '{"message":"Internal Server Error"}', 'application/json', lambdaCallback);
-//     } else {
-//       if (!data.Item) {
-//         return done(200, '[]', 'application/json', lambdaCallback);
-//       } else {
-//         return done(200, JSON.stringify(data.Item.todos), 'application/json', lambdaCallback);
-//       }
-//     }
-//   });
-// }
-
-// function saveTodos(id, todos, lambdaCallback) {
-//   const params = {
-//     TableName: process.env.TABLE,
-//     Item: {
-//       id: id,
-//       todos: todos
-//     }
-//   };
-
-//   doc.put(params, function(err, data) {
-//     if (err) {
-//       console.log('DynamoDB error on put: ', err);
-//       return done(500, '{"message":"Internal Server Error"}', 'application/json', lambdaCallback);
-//     } else {
-//       return done(200, '{"message":"Success"}', 'application/json', lambdaCallback);
-//     }
-//   });
-// }
 
 // Attempt to serve public content from the public directory
 function servePublic(event, context, lambdaCallback) {
@@ -186,12 +126,17 @@ function serveIndex(event, context, lambdaCallback) {
 
 // We're done with this lambda, return to the client with given parameters
 function done(statusCode, body, contentType, lambdaCallback, isBase64Encoded = false) {
+
   lambdaCallback(null, {
     statusCode: statusCode,
     isBase64Encoded: isBase64Encoded,
     body: body,
     headers: {
-      'Content-Type': contentType
+      'Content-Type': contentType,
+      "X-Custom-Header": contentType,
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST",
+      "Access-Control-Allow-Headers": "X-Requested-With,content-type"
     }
   });
 }
