@@ -26,6 +26,7 @@ const routes = {
 function main(event, context, lambdaCallback) {
   console.log(event.body === null);
   var eventToString = false;
+
   if (event.body !== null && event.isBase64Encoded) {
     eventToString = Buffer.from(event.body, 'base64').toString();
   }
@@ -71,10 +72,19 @@ function handleRequest(request) {
 function servePublic(event, context, lambdaCallback) {
   // Set urlPath
   var urlPath;
+
+  // *Production*
   if (event.path === '/prod') {
+
+  // *Development
+  // if (event.path === '/prod/prod') {
     return serveIndex(event, context, lambdaCallback);
   } else {
+    // *Production
     urlPath = event.path.substring(5);
+
+    // *Development
+    // urlPath = event.path.substring(10);
   }
 
   console.log(urlPath);

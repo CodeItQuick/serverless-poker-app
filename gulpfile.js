@@ -13,7 +13,7 @@ gulp.task('lint', () => {
 // Zip up the source
 gulp.task('zip', function() {
   const paths = [
-    'src/**/*.js',
+    'src/**',
     'public/**',
     'node_modules/mime-types/**',
     'node_modules/mime-db/**'
