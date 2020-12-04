@@ -49,7 +49,7 @@ const ACTIONS = {
 /*SELF-SERVICE OPTIONS WHEN USER SELECTS "CHECK SELF-SERVICE OPTIONS" AS AN ACTION*/
 const TEST_INTERACTIVE_OPTIONS = {
   DEPARTMENT_WITH_MULTIPLE_IMAGES: "Choose a department",
-  SIMPLE_TIMEPICKER: "Schedule a meeting with an agent"
+  // SIMPLE_TIMEPICKER: "Schedule a meeting with an agent"
 };
 
 

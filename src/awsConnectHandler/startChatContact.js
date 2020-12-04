@@ -17,6 +17,7 @@ export function awsConnectHandler(event, context, callback) {
 };
 
 function startChatContact(body) {
+    
     var contactFlowId = "";
     if(body.hasOwnProperty('ContactFlowId')){
         contactFlowId = body["ContactFlowId"];
@@ -28,6 +29,9 @@ function startChatContact(body) {
         instanceId = body["InstanceId"];
     }
     console.log("Instance ID: " + instanceId);
+
+    instanceId = "3f117463-2a78-40c0-b0aa-cb1f90fae9a2";
+    contactFlowId = "966137ea-6e94-489d-ae85-c9d51c2ba38e";
 
     return new Promise(function (resolve, reject) {
         var startChat = {

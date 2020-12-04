@@ -63,22 +63,19 @@ Resources:
       Description: The AWS SDK including Amazon Connect Chat APIs.
 
   #### Custom AWS Connect Lambda ####
-  AWSConnectLambda:
+  AWSConnectLambdaTwo:
     Type: "AWS::Lambda::Function"
     Properties:
       Description:  Custom AWS Lambda Function
-      Handler: src/customConnectLambda.handler
+      Handler: "src/awsConnectHandler/customConnectLambda.handler"
       Role: !GetAtt AWSConnectLambdaExecutionRole.Arn
       Runtime: "nodejs10.x"
-      MemorySize: 128
-      Timeout: 10
-      Layers:
-        - !Ref ChatSDKLayer
+      MemorySize: 256
+      Timeout: 5
       Environment:
         Variables:
           INSTANCE_ID: !Ref instanceId
           CONTACT_FLOW_ID: !Ref contactFlowId
-          SOLUTION_ID: !FindInMap [FunctionMap, Configuration, SolutionID]
   AWSConnectLambdaExecutionRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -115,7 +112,7 @@ Resources:
     Type: "AWS::Lambda::Function"
     Properties:
       Description:  AWS Lambda Function to initiate the chat with the end user
-      Handler: "src/awsConnectHandler/startChatContact.handler"
+      Handler: startChatContact.handler
       Role: !GetAtt StartChatLambdaExecutionRole.Arn
       Runtime: "nodejs10.x"
       MemorySize: 128

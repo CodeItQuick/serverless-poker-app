@@ -1,4 +1,4 @@
-const aws = require('aws-sdk');
+// const aws = require('aws-sdk');
 
 exports.handler = (event, context, callback) => main(event, context, callback);
 
@@ -20,7 +20,7 @@ const phoneNumberLookup = {
 };
 
 
-export function main({event}, context, lambdaCallback) {
+export function main(event, context, lambdaCallback) {
   
   
   try {
@@ -32,10 +32,8 @@ export function main({event}, context, lambdaCallback) {
     const province = phoneNumberLookup[areaCode];
     console.log(province);
 
-    console.log(`Returning response: ${JSON.stringify(response)}`);
-    return done(200, JSON.stringify({
-        province
-        }), 'application/json', lambdaCallback);
+    console.log(`Returning response: ${JSON.stringify(province)}`);
+    return lambdaCallback(null, { province });
   } catch (err) {
     console.error(`Error processing Custom Lambda Handler request:`, err);
     return done(200, err, 'application/json', lambdaCallback);
@@ -44,16 +42,5 @@ export function main({event}, context, lambdaCallback) {
 
 function done(statusCode, body, contentType, lambdaCallback, isBase64Encoded = false) {
 
-  lambdaCallback(null, {
-    statusCode: statusCode,
-    isBase64Encoded: isBase64Encoded,
-    body: body,
-    headers: {
-      'Content-Type': contentType,
-      "X-Custom-Header": contentType,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST",
-      "Access-Control-Allow-Headers": "X-Requested-With,content-type"
-    }
-  });
+  lambdaCallback(null, body);
 }
