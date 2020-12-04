@@ -3,7 +3,7 @@
 React AWS Serverless Application with a Serverless backend.
 
 General Functionality:
-* [The main website is currently available through AWS at](https://3uj83kbjaf.execute-api.us-east-1.amazonaws.com/prod/prod)
+* [The main website is currently available through AWS. Chat widget is bottom right icon.](https://3uj83kbjaf.execute-api.us-east-1.amazonaws.com/prod/prod)
 * [The API endpoints this website hits to get the chat widget working. Note: Do not hit this directly, its an API.](https://yk940tr4lj.execute-api.us-east-1.amazonaws.com/Prod)
 * [The other github repository with the React code for deployment using this API](https://github.com/CodeItQuick/PokerHandRangeRubyReact/tree/amazonConnect/integration)
 
@@ -38,12 +38,16 @@ The tech stack is:
 * [Node.js](https://nodejs.org/) 
 * [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)
 * [AWS Connect](https://aws.amazon.com/connect/)
+* AWS SAM Templates
+* AWS Lambdas
 
 ## Interesting files within these two repositories
 * [A custom lambda function I built to retrieve the area code of the caller and place them in an appropriate queue](https://github.com/CodeItQuick/serverless-poker-app/blob/aws/deployed/src/awsConnectHandler/customConnectLambda.js)
 * [The relatively sparse test folder, that has a few tests surrounding the above lambda function](https://github.com/CodeItQuick/serverless-poker-app/tree/aws/deployed/tests)
 * [The SAM template file that constructs all the infrastructure code](https://github.com/CodeItQuick/serverless-poker-app/blob/aws/deployed/template.yml)
-
+* [The main file edited on the frontend to create the chat call center widget](https://github.com/CodeItQuick/PokerHandRangeRubyReact/blob/amazonConnect/integration/backend/frontend/src/containers/App/App.js)
+* [The React Saga that calls the API endpoints for the chat widget](https://github.com/CodeItQuick/PokerHandRangeRubyReact/blob/amazonConnect/integration/backend/frontend/src/containers/MainPage/saga.js)
+* [Front end integration test I had to write in order to get the chat widget working](https://github.com/CodeItQuick/PokerHandRangeRubyReact/pull/69/files#diff-db2ecf1a06ee4b76a55cba21532479947c3b924a4c5633c6c022a7daf2aa99f2)
 ## Deploy with CloudFormation
 
 Prerequisites: [Node.js](https://nodejs.org/en/) and [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed
