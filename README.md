@@ -5,7 +5,7 @@ React AWS Serverless Application with a Serverless backend.
 General Functionality:
 * [The main website is currently available through AWS. Chat widget is bottom right icon.](https://3uj83kbjaf.execute-api.us-east-1.amazonaws.com/prod/prod)
 * [The API endpoints this website hits to get the chat widget working. Note: Do not hit this directly, its an API.](https://yk940tr4lj.execute-api.us-east-1.amazonaws.com/Prod)
-* [The other github repository with the React code for deployment using this API](https://github.com/CodeItQuick/PokerHandRangeRubyReact/tree/amazonConnect/integration)
+* [The other github repository with the React code for deployment using this API - ignore the netlify this should be disabled (I have used it in the past)](https://github.com/CodeItQuick/PokerHandRangeRubyReact/pull/69)
 
 The call flow can be displayed in the files (they were exported):
 * _VF First Contact Flow
