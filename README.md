@@ -3,9 +3,9 @@
 React AWS Serverless Application with a Serverless backend.
 
 General Functionality:
-[The main website is currently available through AWS at](https://3uj83kbjaf.execute-api.us-east-1.amazonaws.com/prod/prod)
-[The API endpoints this website hits to get the chat widget working. Note: Do not hit this directly, its an API.](https://yk940tr4lj.execute-api.us-east-1.amazonaws.com/Prod)
-[The other github repository with the React code for deployment using this API](https://github.com/CodeItQuick/PokerHandRangeRubyReact/tree/amazonConnect/integration)
+* [The main website is currently available through AWS at](https://3uj83kbjaf.execute-api.us-east-1.amazonaws.com/prod/prod)
+* [The API endpoints this website hits to get the chat widget working. Note: Do not hit this directly, its an API.](https://yk940tr4lj.execute-api.us-east-1.amazonaws.com/Prod)
+* [The other github repository with the React code for deployment using this API](https://github.com/CodeItQuick/PokerHandRangeRubyReact/tree/amazonConnect/integration)
 
 The call flow can be displayed in the files (they were exported):
 * _VF First Contact Flow
@@ -32,12 +32,17 @@ before totally handing this off to you.
 
 
 The tech stack is: 
-[React](https://reactjs.org)
-[API Gateway](https://aws.amazon.com/api-gateway/) 
-[AWS Lambda](https://aws.amazon.com/lambda) 
-[Node.js](https://nodejs.org/) 
-[Amazon DynamoDB](https://aws.amazon.com/dynamodb/)
-[AWS Connect](https://aws.amazon.com/connect/)
+* [React](https://reactjs.org)
+* [API Gateway](https://aws.amazon.com/api-gateway/) 
+* [AWS Lambda](https://aws.amazon.com/lambda) 
+* [Node.js](https://nodejs.org/) 
+* [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)
+* [AWS Connect](https://aws.amazon.com/connect/)
+
+## Interesting files within these two repositories
+* [A custom lambda function I built to retrieve the area code of the caller and place them in an appropriate queue](https://github.com/CodeItQuick/serverless-poker-app/blob/aws/deployed/src/awsConnectHandler/customConnectLambda.js)
+* [The relatively sparse test folder, that has a few tests surrounding the above lambda function](https://github.com/CodeItQuick/serverless-poker-app/tree/aws/deployed/tests)
+* [The SAM template file that constructs all the infrastructure code](https://github.com/CodeItQuick/serverless-poker-app/blob/aws/deployed/template.yml)
 
 ## Deploy with CloudFormation
 
